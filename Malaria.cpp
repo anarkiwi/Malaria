@@ -5,7 +5,7 @@
  *
  * This file is part of Malaria.
  *
- * Mozzi is licensed under the MIT License.
+ * Malaria is licensed under the MIT License.
  *
  */
 
