@@ -10,10 +10,10 @@ and other effects.
 The PCM bus uses the following pins, to transmit 9 bit integers (8 + sign) from
 processor 1 to 2:
 
-  pins 2-7: least significant bits
-     pin 8: clock
-    pin 10: sign
-pins 11-12: most significant bits
+      pins 2-7: least 6 significant bits
+         pin 8: clock
+        pin 10: sign (1 is negative)
+    pins 11-12: most 2 significant bits
 
 If hard synchronization is not required, the clock pin could be used for other
 purposes (Eg Mozzi HiFi mode).
