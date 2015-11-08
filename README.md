@@ -32,7 +32,7 @@ purposes (Eg Mozzi HiFi mode).
 Arduino Mozzi    |   | | |   |  | | | | | |     |             |
 processor #2     |   | | |   |  | | | | | |     |             |
                  |   | | |   |  | | | | | |     |             |
-                 |   | | |   |  | | | | | |     |             +-------+ MIDI TX from 
+                 |   | | |   |  | | | | | |     |             +-------+ MIDI TX from
                  |   | | |   |  | | | | | |     |             |         Arduino controller
                  |   | | |   |  | | | | | |     |             |
                  +------------------------------+             |
