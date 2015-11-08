@@ -50,3 +50,56 @@ processor #1     |                              |
                  |                              |
                  +------------------------------+
 
+
+The first Arduino runs Mozzi code like this (sending PCM samples
+to the second):
+
+  [...Mozzi headers...]
+
+  #include <Malaria.h>
+  #include <PinChangeInt.h>
+
+  MalariaPcmWriter pcmWriter;
+
+  [...]
+
+  int updateAudio() {
+    // write computed PCM sample to second Arduino
+    pcmWriter.write(aNote.next());
+    return 0;
+  }
+
+The second Arduino runs Mozzi code like this (samples arrive via
+the PCM reader - note that audioHook() runs in the clock's ISR,
+not loop(), where hard synchronization is required):
+
+  [...Mozzi headers...]
+
+  #include <Malaria.h>
+
+  MalariaPcmReader pcmReader;
+
+  [...]
+
+  void setup() {
+    startMozzi(CONTROL_RATE);
+    [...]
+    // clock ISR
+    attachPinChangeInterrupt(8, pcmClock, CHANGE);
+  }
+
+  [...]
+
+  void pcmClock() {
+    // audioHook() now runs in clock's ISR, not loop().
+    audioHook();
+  }
+
+  void loop() {
+  }
+
+  int updateAudio() {
+    // samples arrive from first Arduino and can be
+    // combined with locally computed samples.
+    return (pcmReader.read() >> 1) + (aNote.next() >> 1);
+  }
