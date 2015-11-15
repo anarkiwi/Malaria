@@ -4,8 +4,12 @@
 #include <mozzi_midi.h>
 
 #include <tables/sin2048_int8.h>
+#include <tables/saw2048_int8.h>
+#include <tables/triangle2048_int8.h>
+#include <tables/square_no_alias_2048_int8.h>
 
-#define applyGain(v, g)  ((v * g) >> 8)
+#define applyGain(v, g)	((v * g) >> 8)
+#define OSCIL_CELLS	2048
 
 
 class MalariaInstrument {
@@ -23,10 +27,10 @@ class MalariaInstrument {
 class FMBell : public MalariaInstrument {
  public:
   FMBell() {
-    aCarrier.setTable(SIN2048_DATA);
-    aModulator.setTable(SIN2048_DATA);
-    aCarrier.setFreq(0);
-    aModulator.setFreq(0);
+    carrier.setTable(SIN2048_DATA);
+    modulator.setTable(SIN2048_DATA);
+    carrier.setFreq(0);
+    modulator.setFreq(0);
     modEnv.setIdleLevel(0);
     modEnv.setLevels(255, 0, 0, 0);
     modEnv.setTimes(20, 2000, 0, 0);
@@ -38,11 +42,11 @@ class FMBell : public MalariaInstrument {
   }
   void noteOn(byte note, byte velocity) {
     float fundamentalHz = mtof(float(note));
-    carrierFreq = float_to_Q16n16(fundamentalHz * 5.f);
-    modulatorFreq = float_to_Q16n16(fundamentalHz * 7.f);
-    deviation = (modulatorFreq>>16) * mod_index;
-    aModulator.setFreq_Q16n16(modulatorFreq);
-    aCarrier.setFreq_Q16n16(carrierFreq);
+    Q16n16 carrierFreq = float_to_Q16n16(fundamentalHz * 5.f);
+    carrier.setFreq_Q16n16(carrierFreq);
+    Q16n16 modulatorFreq = float_to_Q16n16(fundamentalHz * 7.f);
+    deviation = (modulatorFreq>>16) * float_to_Q8n8(1.0f);
+    modulator.setFreq_Q16n16(modulatorFreq);
     modEnv.noteOn();
     carEnv.noteOn();
     gate = true;
@@ -57,8 +61,8 @@ class FMBell : public MalariaInstrument {
   }
   int updateAudio() {
     if (gate) {
-      Q15n16 modulation = applyGain(deviation, applyGain(aModulator.next(), modEnv.next()));
-      return applyGain(applyGain(aCarrier.phMod(modulation), carEnv.next()), gain);
+      Q15n16 modulation = applyGain(deviation, applyGain(modulator.next(), modEnv.next()));
+      return applyGain(applyGain(carrier.phMod(modulation), carEnv.next()), gain);
     } else {
       return 0;
     }
@@ -67,13 +71,11 @@ class FMBell : public MalariaInstrument {
     return gate;
   }
  private:
-  const Q8n8 mod_index = float_to_Q8n8(1.0f);
-  Oscil<SIN2048_NUM_CELLS, AUDIO_RATE> aCarrier;
-  Oscil<SIN2048_NUM_CELLS, AUDIO_RATE> aModulator;
+  Oscil<OSCIL_CELLS, AUDIO_RATE> carrier;
+  Oscil<OSCIL_CELLS, AUDIO_RATE> modulator;
   ADSR <CONTROL_RATE, AUDIO_RATE> modEnv;
   ADSR <CONTROL_RATE, AUDIO_RATE> carEnv;
-  Q16n16 carrierFreq, modulatorFreq, deviation;
+  Q16n16 deviation;
   byte gain;
   bool gate;
 };
-
