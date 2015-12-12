@@ -10,10 +10,10 @@ void MalariaInstrument::noteOff(byte note, byte velocity) {
 
 FMBell::FMBell() {
   carrier.setEnvLevels(255, 0, 0, 0);
-  carrier.setEnvTimes(20, 2000, 0, 0);
+  carrier.setEnvTimes(MIN_ADRS_MS, 2000, 0, 0);
   carrier.setGain(0);
-  modulator.setEnvLevels(255, 0, 0, 0);
-  modulator.setEnvTimes(20, 2000, 0, 0);
+  modulator.setEnvLevels(255, 20, 0, 0);
+  modulator.setEnvTimes(MIN_ADRS_MS, 2000, 0, 0);
   modulator.setGain(255);
   gate = false;
 }
