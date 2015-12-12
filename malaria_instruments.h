@@ -23,5 +23,4 @@ class FMBell : public MalariaInstrument {
  private:
   MalariaOperator modulator;
   MalariaOperator carrier;
-  Q16n16 deviation;
 };
