@@ -20,7 +20,7 @@ int MalariaOperator::phMod(Q15n16 modulation) {
 }
 
 Q15n16 MalariaOperator::getPhMod(byte intensity) {
-  return applyGain((Q15n16) intensity * osc.next(), gain);
+  return applyGain(applyGain((Q15n16) intensity * osc.next(), env.next()), gain);
 }
 
 void MalariaOperator::setEnvLevels(byte a, byte d, byte s, byte r) {

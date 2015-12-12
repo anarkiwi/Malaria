@@ -8,6 +8,9 @@
 #include <tables/triangle2048_int8.h>
 #include <tables/square_no_alias_2048_int8.h>
 
+#define	CONTROL_RATE	256
+#define MIN_ADRS_MS	(int(1e3 / CONTROL_RATE) + 1)
+
 #define applyGain(v, g)	((v * g) >> 8)
 #define OSCIL_CELLS	2048
 
