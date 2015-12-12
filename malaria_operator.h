@@ -18,7 +18,7 @@ class MalariaOperator {
   void updateControl();
   int next();
   int phMod(Q15n16 modulation);
-  Q15n16 getPhMod(Q16n16 deviation);
+  Q15n16 getPhMod(byte intensity);
   void setEnvLevels(byte a, byte d, byte s, byte r);
   void setEnvTimes(int a, int d, int s, int r);
   void setGain(byte g);
@@ -27,6 +27,6 @@ class MalariaOperator {
   void noteOn();
  protected:
   Oscil<OSCIL_CELLS, AUDIO_RATE> osc;
-  ADSR <CONTROL_RATE, AUDIO_RATE> env; 
+  ADSR <CONTROL_RATE, AUDIO_RATE> env;
   byte gain;
 };

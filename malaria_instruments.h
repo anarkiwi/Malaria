@@ -6,7 +6,7 @@ class MalariaInstrument {
  public:
   MalariaInstrument() {};
   virtual void noteOn(byte note, byte velocity);
-  virtual void noteOff(byte note, byte velocity);
+  void noteOff(byte note, byte velocity);
   virtual void updateControl();
   virtual int updateAudio();
   bool isPlaying();
@@ -18,7 +18,6 @@ class FMBell : public MalariaInstrument {
  public:
   FMBell();
   void noteOn(byte note, byte velocity);
-  void noteOff(byte note, byte velocity);
   void updateControl();
   int updateAudio();
  private:
