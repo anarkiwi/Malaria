@@ -21,6 +21,5 @@ class FMBell : public MalariaInstrument {
   void updateControl();
   int updateAudio();
  private:
-  MalariaOperator modulator;
-  MalariaOperator carrier;
+  SimpleFMPair pair;
 };

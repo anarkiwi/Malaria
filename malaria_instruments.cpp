@@ -8,36 +8,23 @@ void MalariaInstrument::noteOff(byte note, byte velocity) {
   gate = false;
 }
 
-FMBell::FMBell() {
-  carrier.setEnvLevels(255, 0, 0, 0);
-  carrier.setEnvTimes(MIN_ADRS_MS, 2000, 0, 0);
-  carrier.setGain(0);
-  modulator.setEnvLevels(255, 20, 0, 0);
-  modulator.setEnvTimes(MIN_ADRS_MS, 2000, 0, 0);
-  modulator.setGain(255);
+FMBell::FMBell() : pair(5, 7, 4, 2000, 255) {
   gate = false;
 }
 
 void FMBell::noteOn(byte note, byte velocity) {
   float fundamentalHz = mtof(float(note));
-  Q16n16 carrierFreq = float_to_Q16n16(fundamentalHz * 5.f);
-  carrier.setFreq_Q16n16(carrierFreq);
-  Q16n16 modulatorFreq = float_to_Q16n16(fundamentalHz * 7.f);
-  modulator.setFreq_Q16n16(modulatorFreq);
-  carrier.setGain(velocity);
-  carrier.noteOn();
-  modulator.noteOn();
+  pair.noteOn(fundamentalHz, velocity);
   gate = true;
 }
 
 void FMBell::updateControl() {
-  modulator.updateControl();
-  carrier.updateControl();
+  pair.updateControl();
 }
 
 int FMBell::updateAudio() {
   if (gate) {
-    return carrier.phMod(modulator.getPhMod(255));
+    return pair.updateAudio();
   } else {
     return 0;
   }
