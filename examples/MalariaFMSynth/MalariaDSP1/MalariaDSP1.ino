@@ -33,8 +33,8 @@ void HandleNoteOff(byte channel, byte note, byte velocity) {
 }
 
 void updateControl() {
-  MIDI.read();
   instrument.updateControl();
+  MIDI.read();
 }
 
 int updateAudio() {
