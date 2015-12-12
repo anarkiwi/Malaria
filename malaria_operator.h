@@ -10,8 +10,6 @@
 
 #define	CONTROL_RATE	256
 #define MIN_ADRS_MS	(int(1e3 / CONTROL_RATE) + 1)
-
-#define applyGain(v, g)	((v * g) >> 8)
 #define OSCIL_CELLS	2048
 
 
@@ -36,35 +34,14 @@ class MalariaOperator {
 
 class SimpleFMPair {
  public:
-  SimpleFMPair(float c_ratio, float m_ratio, int a_ms, int d_ms, byte mod_gain) {
-    carrier_ratio = c_ratio;
-    modulator_ratio = m_ratio;
-    carrier.setEnvLevels(255, 0, 0, 0);
-    carrier.setEnvTimes(a_ms, d_ms, 0, 0);
-    carrier.setGain(0);
-    modulator.setEnvLevels(255, 20, 0, 0);
-    modulator.setEnvTimes(a_ms, d_ms, 0, 0);
-    modulator.setGain(mod_gain);
-  }
-  void noteOn(float fundamentalHz, byte car_gain) {
-    Q16n16 carrierFreq = float_to_Q16n16(fundamentalHz * carrier_ratio);
-    carrier.setFreq_Q16n16(carrierFreq);
-    Q16n16 modulatorFreq = float_to_Q16n16(fundamentalHz * modulator_ratio);
-    modulator.setFreq_Q16n16(modulatorFreq);
-    carrier.setGain(car_gain);
-    carrier.noteOn();
-    modulator.noteOn();
-  }
-  void updateControl() {
-    modulator.updateControl();
-    carrier.updateControl();
-  }
-  int updateAudio() {
-    return carrier.phMod(modulator.getPhMod(255));
-  }
+  SimpleFMPair() {};
+  void setParameters(float c_ratio, float m_ratio, int a_ms, int d_ms, byte mod_gain);
+  void noteOn(float fundamentalHz, byte car_gain);
+  void updateControl();
+  int updateAudio();
  protected:
-   MalariaOperator carrier;
-   MalariaOperator modulator;
-   float carrier_ratio;
-   float modulator_ratio;
+  MalariaOperator carrier;
+  MalariaOperator modulator;
+  float carrier_ratio;
+  float modulator_ratio;
 };

@@ -4,7 +4,6 @@
 
 class MalariaInstrument {
  public:
-  MalariaInstrument() {};
   virtual void noteOn(byte note, byte velocity);
   void noteOff(byte note, byte velocity);
   virtual void updateControl();
@@ -14,12 +13,21 @@ class MalariaInstrument {
   bool gate;
 };
 
-class FMBell : public MalariaInstrument {
+class SimpleFMPairInstrument : public MalariaInstrument {
  public:
-  FMBell();
   void noteOn(byte note, byte velocity);
   void updateControl();
   int updateAudio();
- private:
+ protected:
   SimpleFMPair pair;
+};
+
+class FMBell : public SimpleFMPairInstrument {
+ public:
+  FMBell();
+};
+
+class FMBass : public SimpleFMPairInstrument {
+ public:
+  FMBass();
 };
